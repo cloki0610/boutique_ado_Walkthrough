@@ -8,6 +8,7 @@ class Category(models.Model):
     friendly_name = models.CharField(max_length=254, null=True, blank=True)
 
     class Meta:
+        """ Change display name in admin site """
         verbose_name_plural = 'Categories'
 
     def __str__(self):
