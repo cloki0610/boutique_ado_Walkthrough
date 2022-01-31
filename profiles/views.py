@@ -1,11 +1,13 @@
 """ View for profile application """
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from checkout.models import Order
 from .models import UserProfile
 from .forms import UserProfileForm
 
 
+@login_required
 def profile_display(request):
     """ Display the user's profile. """
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -14,7 +16,11 @@ def profile_display(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile updated successfully')
-    form = UserProfileForm(instance=profile)
+        else:
+            messages.error(request, 'Update failed!. ' +
+                           'Please ensure the form is valid.')
+    else:
+        form = UserProfileForm(instance=profile)
     orders = profile.orders.all()
     template = 'profiles/profile.html'
     context = {
